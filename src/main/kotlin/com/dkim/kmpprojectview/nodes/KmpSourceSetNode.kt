@@ -17,10 +17,21 @@ class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: Vi
     }
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> {
-        return (value.children ?: emptyArray())
+        val children = mutableListOf<AbstractTreeNode<*>>()
+
+        val hasManifestsDir = value.findChild("manifests")?.isDirectory == true
+        if (!hasManifestsDir) {
+            value.findChild("AndroidManifest.xml")?.let {
+                children.add(KmpManifestsNode(project, it, settings))
+            }
+        }
+
+        (value.children ?: emptyArray())
             .filter { it.isDirectory && it.name in ALLOWED_FOLDERS }
             .sortedBy { it.name }
-            .map { KmpSourceFolderNode(project, it, settings) }
+            .mapTo(children) { KmpSourceFolderNode(project, it, settings) }
+
+        return children
     }
 
     override fun update(presentation: PresentationData) {
