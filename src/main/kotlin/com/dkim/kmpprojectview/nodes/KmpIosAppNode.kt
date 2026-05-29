@@ -1,6 +1,6 @@
 package com.dkim.kmpprojectview.nodes
 
-import com.intellij.icons.AllIcons
+import com.dkim.kmpprojectview.KmpIcons
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -21,7 +21,7 @@ class KmpIosAppNode(project: Project, dir: VirtualFile, settings: ViewSettings)
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(value.name)
-        presentation.setIcon(AllIcons.Nodes.Module)
+        presentation.setIcon(KmpIcons.LibraryModule)
     }
 
     override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
