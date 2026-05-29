@@ -8,7 +8,6 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.ui.JBColor
 import com.intellij.util.IconUtil
 
 class KmpGradleScriptFileNode(
@@ -27,9 +26,6 @@ class KmpGradleScriptFileNode(
         presentation.setPresentableText(name)
         presentation.setLocationString(description)
         presentation.setIcon(IconUtil.getIcon(value, 0, project))
-        if (value.name == "local.properties") {
-            presentation.forcedTextForeground = JBColor.ORANGE
-        }
     }
 
     override fun contains(file: VirtualFile): Boolean = value == file
