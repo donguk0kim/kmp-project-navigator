@@ -14,16 +14,29 @@ class KmpRootNode(project: Project, settings: ViewSettings)
     : ProjectViewNode<Project>(project, project, settings) {
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> {
-        val moduleNodes = ModuleManager.getInstance(project).modules
+        val allModules = ModuleManager.getInstance(project).modules
+        val allModuleContentRoots = allModules
+            .flatMap { ModuleRootManager.getInstance(it).contentRoots.toList() }
+            .toSet()
+
+        val moduleNodes = allModules
             .filter { it.name != project.name }
+            .filter { module ->
+                // Exclude KMP source-set child modules (e.g. "Seatosky.app.commonMain")
+                val shortName = module.name.removePrefix("${project.name}.")
+                !shortName.contains('.')
+            }
+            .filter { module ->
+                // Exclude virtual KMP target modules (e.g. "Seatosky.ios") that have no
+                // content root — they are not real Gradle subprojects
+                ModuleRootManager.getInstance(module).contentRoots.isNotEmpty()
+            }
             .map { KmpModuleNode(project, it, settings) }
 
-        val iosNodes = findIosAppDirs()
+        val iosNodes = findIosAppDirs(allModuleContentRoots)
             .map { KmpIosAppNode(project, it, settings) }
 
-        val topLevel = (moduleNodes + iosNodes).sortedBy { it.displayName() }
-
-        return topLevel + KmpGradleScriptsNode(project, settings)
+        return moduleNodes + iosNodes + KmpGradleScriptsNode(project, settings)
     }
 
     override fun update(presentation: PresentationData) {
@@ -32,22 +45,9 @@ class KmpRootNode(project: Project, settings: ViewSettings)
 
     override fun contains(file: VirtualFile): Boolean = true
 
-    private fun KmpModuleNode.displayName() = value.name.removePrefix("${project.name}.")
-    private fun KmpIosAppNode.displayName() = value.name
-    private fun AbstractTreeNode<*>.displayName() = when (this) {
-        is KmpModuleNode -> displayName()
-        is KmpIosAppNode -> displayName()
-        else -> ""
-    }
-
-    private fun findIosAppDirs(): List<VirtualFile> {
+    private fun findIosAppDirs(moduleRoots: Set<VirtualFile>): List<VirtualFile> {
         val basePath = project.basePath ?: return emptyList()
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath) ?: return emptyList()
-
-        val moduleRoots = ModuleManager.getInstance(project).modules
-            .flatMap { ModuleRootManager.getInstance(it).contentRoots.toList() }
-            .toSet()
-
         return (baseDir.children ?: emptyArray())
             .filter { it.isDirectory && it !in moduleRoots && isIosAppDir(it) }
             .sortedBy { it.name }

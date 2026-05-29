@@ -10,17 +10,25 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.util.IconUtil
 
 class KmpGradleScriptsNode(project: Project, settings: ViewSettings)
     : ProjectViewNode<String>(project, "Gradle Scripts", settings) {
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> =
-        findGradleScripts().map { KmpGradleScriptFileNode(project, it, settings) }
+        findGradleScripts().mapIndexed { index, file ->
+            KmpGradleScriptFileNode(project, file, settings, index)
+        }
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText("Gradle Scripts")
-        presentation.setIcon(AllIcons.Nodes.Folder)
+        val icon = findGradleScripts().firstOrNull()
+            ?.let { IconUtil.getIcon(it, 0, project) }
+            ?: AllIcons.Nodes.Folder
+        presentation.setIcon(icon)
     }
+
+    override fun getWeight(): Int = Int.MAX_VALUE
 
     override fun contains(file: VirtualFile): Boolean = false
 
@@ -29,23 +37,44 @@ class KmpGradleScriptsNode(project: Project, settings: ViewSettings)
         val basePath = project.basePath ?: return emptyList()
         val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath) ?: return emptyList()
 
-        listOf(
-            "build.gradle", "build.gradle.kts",
-            "settings.gradle", "settings.gradle.kts",
-            "gradle.properties", "local.properties"
-        ).forEach { name -> baseDir.findChild(name)?.let { scripts.add(it) } }
+        // 1. Project-level build file first
+        listOf("build.gradle.kts", "build.gradle").forEach { name ->
+            baseDir.findChild(name)?.let { scripts.add(it) }
+        }
+
+        // 2. Module build files sorted alphabetically by short module name
+        val modules = ModuleManager.getInstance(project).modules
+            .filter { it.name != project.name }
+            .sortedBy { it.name.removePrefix("${project.name}.") }
+        for (module in modules) {
+            val moduleRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: continue
+            listOf("build.gradle.kts", "build.gradle").forEach { name ->
+                moduleRoot.findChild(name)?.let { scripts.add(it) }
+            }
+        }
+
+        // 3. proguard-rules.pro from module directories
+        for (module in modules) {
+            val moduleRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: continue
+            moduleRoot.findChild("proguard-rules.pro")?.let { scripts.add(it) }
+        }
+
+        // 4. Remaining project-level files in Android Studio order
+        baseDir.findChild("gradle.properties")?.let { scripts.add(it) }
 
         baseDir.findChild("gradle")
             ?.findChild("wrapper")
             ?.findChild("gradle-wrapper.properties")
             ?.let { scripts.add(it) }
 
-        for (module in ModuleManager.getInstance(project).modules) {
-            if (module.name == project.name) continue
-            val moduleRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: continue
-            listOf("build.gradle", "build.gradle.kts").forEach { name ->
-                moduleRoot.findChild(name)?.let { scripts.add(it) }
-            }
+        baseDir.findChild("gradle")
+            ?.findChild("libs.versions.toml")
+            ?.let { scripts.add(it) }
+
+        baseDir.findChild("local.properties")?.let { scripts.add(it) }
+
+        listOf("settings.gradle.kts", "settings.gradle").forEach { name ->
+            baseDir.findChild(name)?.let { scripts.add(it) }
         }
 
         return scripts

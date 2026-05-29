@@ -8,31 +8,67 @@ import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.ui.JBColor
 import com.intellij.util.IconUtil
 
-class KmpGradleScriptFileNode(project: Project, file: VirtualFile, settings: ViewSettings)
-    : ProjectViewNode<VirtualFile>(project, file, settings) {
+class KmpGradleScriptFileNode(
+    project: Project,
+    file: VirtualFile,
+    settings: ViewSettings,
+    private val sortOrder: Int = 0,
+) : ProjectViewNode<VirtualFile>(project, file, settings) {
+
+    override fun getWeight(): Int = sortOrder
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> = emptyList()
 
     override fun update(presentation: PresentationData) {
-        presentation.setPresentableText(buildDisplayName())
+        val (name, description) = buildDisplayParts()
+        presentation.setPresentableText(name)
+        presentation.setLocationString(description)
         presentation.setIcon(IconUtil.getIcon(value, 0, project))
+        if (value.name == "local.properties") {
+            presentation.forcedTextForeground = JBColor.ORANGE
+        }
     }
 
     override fun contains(file: VirtualFile): Boolean = value == file
 
-    private fun buildDisplayName(): String {
+    private fun buildDisplayParts(): Pair<String, String> {
+        val description = when (value.name) {
+            "gradle.properties" -> "Project Properties"
+            "gradle-wrapper.properties" -> "Gradle Version"
+            "local.properties" -> "SDK Location"
+            "settings.gradle", "settings.gradle.kts" -> "Project Settings"
+            "libs.versions.toml" -> "Version Catalog \"libs\""
+            "proguard-rules.pro" -> getProguardDescription()
+            else -> null
+        }
+        if (description != null) return value.name to "($description)"
+
         for (module in ModuleManager.getInstance(project).modules) {
             val moduleRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: continue
             if (value.parent == moduleRoot) {
                 return if (module.name == project.name) {
-                    "${value.name} (Project: ${project.name})"
+                    value.name to "(Project: ${project.name})"
                 } else {
-                    "${value.name} (Module: ${module.name.removePrefix("${project.name}.")})"
+                    val shortName = module.name.removePrefix("${project.name}.")
+                    value.name to "(Module :$shortName)"
                 }
             }
         }
-        return "${value.name} (Project: ${project.name})"
+        return value.name to "(Project: ${project.name})"
+    }
+
+    private fun getProguardDescription(): String {
+        for (module in ModuleManager.getInstance(project).modules) {
+            if (module.name == project.name) continue
+            val moduleRoot = ModuleRootManager.getInstance(module).contentRoots.firstOrNull() ?: continue
+            if (value.parent == moduleRoot) {
+                val shortName = module.name.removePrefix("${project.name}.")
+                return "ProGuard Rules for \":$shortName\""
+            }
+        }
+        return "ProGuard Rules"
     }
 }

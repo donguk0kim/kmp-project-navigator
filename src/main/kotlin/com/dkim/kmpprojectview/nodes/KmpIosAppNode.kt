@@ -21,7 +21,7 @@ class KmpIosAppNode(project: Project, dir: VirtualFile, settings: ViewSettings)
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(value.name)
-        presentation.setIcon(AllIcons.Nodes.Folder)
+        presentation.setIcon(AllIcons.Nodes.Module)
     }
 
     override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
