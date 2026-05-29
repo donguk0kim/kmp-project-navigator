@@ -1,6 +1,6 @@
 package com.dkim.kmpprojectview.nodes
 
-import com.intellij.icons.AllIcons
+import com.dkim.kmpprojectview.KmpIcons
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -10,7 +10,6 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.util.IconUtil
 
 class KmpGradleScriptsNode(project: Project, settings: ViewSettings)
     : ProjectViewNode<String>(project, "Gradle Scripts", settings) {
@@ -22,10 +21,7 @@ class KmpGradleScriptsNode(project: Project, settings: ViewSettings)
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText("Gradle Scripts")
-        val icon = findGradleScripts().firstOrNull()
-            ?.let { IconUtil.getIcon(it, 0, project) }
-            ?: AllIcons.Nodes.Folder
-        presentation.setIcon(icon)
+        presentation.setIcon(KmpIcons.GradleFile)
     }
 
     override fun getWeight(): Int = Int.MAX_VALUE

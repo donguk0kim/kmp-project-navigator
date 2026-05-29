@@ -1,6 +1,6 @@
 package com.dkim.kmpprojectview.nodes
 
-import com.intellij.icons.AllIcons
+import com.dkim.kmpprojectview.KmpIcons
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -26,7 +26,7 @@ class KmpModuleNode(project: Project, module: Module, settings: ViewSettings)
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(value.name.removePrefix("${project.name}."))
-        presentation.setIcon(AllIcons.Nodes.Module)
+        presentation.setIcon(KmpIcons.LibraryModule)
     }
 
     override fun contains(file: VirtualFile): Boolean {
