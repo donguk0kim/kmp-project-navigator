@@ -1,6 +1,8 @@
 package com.dkim.kmpprojectview.nodes
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.projectView.NodeSortOrder
+import com.intellij.ide.projectView.NodeSortSettings
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -18,6 +20,8 @@ class KmpPackageNode(
     settings: ViewSettings
 ) : ProjectViewNode<VirtualFile>(project, dir, settings) {
 
+    override fun getSortOrder(settings: NodeSortSettings): NodeSortOrder = NodeSortOrder.PACKAGE
+
     override fun getChildren(): Collection<AbstractTreeNode<*>> = buildChildren(project, value, settings)
 
     override fun update(presentation: PresentationData) {
@@ -31,7 +35,6 @@ class KmpPackageNode(
         fun buildChildren(project: Project, dir: VirtualFile, settings: ViewSettings): List<AbstractTreeNode<*>> {
             val psiManager = PsiManager.getInstance(project)
             return (dir.children ?: emptyArray())
-                .sortedWith(compareBy({ !it.isDirectory }, { it.name }))
                 .mapNotNull { child ->
                     if (child.isDirectory) {
                         val (compacted, name) = compact(child)
