@@ -14,7 +14,15 @@ import com.intellij.openapi.vfs.VfsUtil
 class KmpModuleNode(project: Project, module: Module, settings: ViewSettings)
     : ProjectViewNode<Module>(project, module, settings) {
 
-    override fun getChildren(): Collection<AbstractTreeNode<*>> = emptyList()
+    override fun getChildren(): Collection<AbstractTreeNode<*>> {
+        val contentRoot = ModuleRootManager.getInstance(value).contentRoots.firstOrNull()
+            ?: return emptyList()
+        val srcDir = contentRoot.findChild("src") ?: return emptyList()
+        return (srcDir.children ?: emptyArray())
+            .filter { it.isDirectory }
+            .sortedBy { it.name }
+            .map { KmpSourceSetNode(project, it, settings) }
+    }
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(value.name.removePrefix("${project.name}."))
