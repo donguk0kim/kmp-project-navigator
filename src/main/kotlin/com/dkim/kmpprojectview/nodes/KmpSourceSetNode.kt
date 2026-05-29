@@ -25,7 +25,7 @@ class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: Vi
 
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(value.name)
-        presentation.setIcon(AllIcons.Nodes.Package)
+        presentation.setIcon(AllIcons.Nodes.Module)
     }
 
     override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
