@@ -13,7 +13,7 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        KMP Project View
+        KMP Project View adds a dedicated project view for Kotlin Multiplatform projects, grouping modules, source sets, manifests, iOS app files, and Gradle scripts in a layout tailored for KMP development.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
