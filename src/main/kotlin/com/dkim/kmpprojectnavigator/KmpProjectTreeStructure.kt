@@ -1,6 +1,6 @@
-package com.dkim.kmpprojectview
+package com.dkim.kmpprojectnavigator
 
-import com.dkim.kmpprojectview.nodes.KmpRootNode
+import com.dkim.kmpprojectnavigator.nodes.KmpRootNode
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.projectView.impl.AbstractProjectTreeStructure
 import com.intellij.ide.util.treeView.AbstractTreeNode

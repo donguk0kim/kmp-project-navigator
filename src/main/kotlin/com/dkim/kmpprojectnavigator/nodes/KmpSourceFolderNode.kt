@@ -1,4 +1,4 @@
-package com.dkim.kmpprojectview.nodes
+package com.dkim.kmpprojectnavigator.nodes
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.PresentationData

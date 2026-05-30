@@ -1,19 +1,19 @@
 <!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
 <idea-plugin>
     <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
-    <id>com.dkim.kmpprojectview.kmp-project-view</id>
+    <id>com.dkim.kmpprojectnavigator</id>
 
     <!-- Public plugin name should be written in Title Case.
      Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-name -->
-    <name>KMP Project View</name>
+    <name>KMP Project Navigator</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor url="https://github.com/donguk0kim/kmp-project-view">dkim</vendor>
+    <vendor url="https://github.com/donguk0kim/kmp-project-navigator">dkim</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/best-practices-for-listing.html#plugin-description -->
     <description><![CDATA[
-        KMP Project View adds a dedicated project view for Kotlin Multiplatform projects, grouping modules, source sets, manifests, iOS app files, and Gradle scripts in a layout tailored for KMP development.
+        KMP Project Navigator adds a dedicated project view for Kotlin Multiplatform projects, grouping modules, source sets, manifests, iOS app files, and Gradle scripts in a layout tailored for KMP development.
         ]]></description>
 
     <!-- Product and plugin compatibility requirements.
@@ -22,7 +22,7 @@
     <depends>com.intellij.modules.java</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectViewPane implementation="com.dkim.kmpprojectview.KmpProjectViewPane"/>
+        <projectViewPane implementation="com.dkim.kmpprojectnavigator.KmpProjectNavigatorPane"/>
     </extensions>
 
 </idea-plugin>

@@ -1,6 +1,6 @@
-package com.dkim.kmpprojectview.nodes
+package com.dkim.kmpprojectnavigator.nodes
 
-import com.dkim.kmpprojectview.KmpIcons
+import com.dkim.kmpprojectnavigator.KmpIcons
 import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode

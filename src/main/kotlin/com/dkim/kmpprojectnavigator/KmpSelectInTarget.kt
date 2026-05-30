@@ -1,4 +1,4 @@
-package com.dkim.kmpprojectview
+package com.dkim.kmpprojectnavigator
 
 import com.intellij.ide.impl.ProjectViewSelectInTarget
 import com.intellij.openapi.project.Project
@@ -17,7 +17,7 @@ class KmpSelectInTarget(private val project: Project) : ProjectViewSelectInTarge
         return file == baseDir || VfsUtil.isAncestor(baseDir, file, false)
     }
 
-    override fun getMinorViewId(): String = KmpProjectViewPane.ID
+    override fun getMinorViewId(): String = KmpProjectNavigatorPane.ID
 
     override fun getWeight(): Float = 10f
 }

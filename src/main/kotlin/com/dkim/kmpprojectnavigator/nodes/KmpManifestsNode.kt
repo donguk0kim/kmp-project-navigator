@@ -1,8 +1,6 @@
-package com.dkim.kmpprojectview.nodes
+package com.dkim.kmpprojectnavigator.nodes
 
 import com.intellij.icons.AllIcons
-import com.intellij.ide.projectView.NodeSortOrder
-import com.intellij.ide.projectView.NodeSortSettings
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -17,8 +15,6 @@ class KmpManifestsNode(
     private val manifestFile: VirtualFile,
     settings: ViewSettings
 ) : ProjectViewNode<VirtualFile>(project, manifestFile.parent, settings) {
-
-    override fun getSortOrder(settings: NodeSortSettings): NodeSortOrder = NodeSortOrder.FOLDER
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> {
         val psiFile = PsiManager.getInstance(project).findFile(manifestFile) ?: return emptyList()

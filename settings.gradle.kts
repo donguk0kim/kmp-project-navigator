@@ -1,6 +1,6 @@
 import org.jetbrains.intellij.platform.gradle.extensions.intellijPlatform
 
-rootProject.name = "kmp-project-view"
+rootProject.name = "kmp-project-navigator"
 
 pluginManagement {
     plugins {

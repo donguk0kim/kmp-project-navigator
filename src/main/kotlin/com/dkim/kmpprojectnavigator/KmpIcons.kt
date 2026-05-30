@@ -1,4 +1,4 @@
-package com.dkim.kmpprojectview
+package com.dkim.kmpprojectnavigator
 
 import com.intellij.openapi.util.IconLoader
 

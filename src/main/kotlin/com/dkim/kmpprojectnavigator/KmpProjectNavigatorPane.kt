@@ -1,4 +1,4 @@
-package com.dkim.kmpprojectview
+package com.dkim.kmpprojectnavigator
 
 import com.intellij.icons.AllIcons
 import com.intellij.ide.SelectInTarget
@@ -9,10 +9,10 @@ import com.intellij.openapi.project.Project
 import javax.swing.Icon
 import javax.swing.tree.DefaultTreeModel
 
-class KmpProjectViewPane(project: Project) : AbstractProjectViewPaneWithAsyncSupport(project) {
+class KmpProjectNavigatorPane(project: Project) : AbstractProjectViewPaneWithAsyncSupport(project) {
 
     companion object {
-        const val ID = "KmpProjectView"
+        const val ID = "KmpProjectNavigator"
     }
 
     override fun getTitle(): String = "KMP Project"
