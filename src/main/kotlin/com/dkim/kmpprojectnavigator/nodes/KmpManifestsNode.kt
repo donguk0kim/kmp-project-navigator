@@ -26,5 +26,10 @@ class KmpManifestsNode(
         presentation.setIcon(AllIcons.Modules.SourceRoot)
     }
 
+    override fun getSortKey(): Comparable<*> =
+        KmpSourceSetContentSort.sortKey(KmpSourceSetContentSort.MANIFESTS_FOLDER)
+
+    override fun getTypeSortKey(): Comparable<*> = sortKey
+
     override fun contains(file: VirtualFile): Boolean = file == manifestFile
 }

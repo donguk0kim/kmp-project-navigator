@@ -12,14 +12,10 @@ import com.intellij.openapi.vfs.VfsUtil
 class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: ViewSettings)
     : ProjectViewNode<VirtualFile>(project, sourceSetDir, settings) {
 
-    companion object {
-        private val RESOURCE_FOLDERS = setOf("res", "resources", "composeResources")
-    }
-
     override fun getChildren(): Collection<AbstractTreeNode<*>> {
         val children = mutableListOf<AbstractTreeNode<*>>()
 
-        val hasManifestsDir = value.findChild("manifests")?.isDirectory == true
+        val hasManifestsDir = value.findChild(KmpSourceSetContentSort.MANIFESTS_FOLDER)?.isDirectory == true
         if (!hasManifestsDir) {
             value.findChild("AndroidManifest.xml")?.let {
                 children.add(KmpManifestsNode(project, it, settings))
@@ -28,7 +24,7 @@ class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: Vi
 
         (value.children ?: emptyArray())
             .filter { it.isDirectory }
-            .sortedWith(compareBy<VirtualFile> { it.name in RESOURCE_FOLDERS }.thenBy { it.name })
+            .sortedBy { KmpSourceSetContentSort.sortKey(it.name) }
             .mapTo(children) { KmpSourceFolderNode(project, it, settings) }
 
         return children
