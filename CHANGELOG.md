@@ -1,5 +1,7 @@
-<!-- Keep a Changelog guide -> https://keepachangelog.com -->
+# KMP Project View Changelog
 
-# Kmp-project-view Changelog
+## [1.0.0] - 2026-05-30
 
-## [Unreleased]
+### Added
+
+- Added a dedicated `KMP Project` pane for Kotlin Multiplatform projects.

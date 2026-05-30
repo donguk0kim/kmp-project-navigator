@@ -16,6 +16,15 @@ dependencies {
 
 intellijPlatform {
     pluginConfiguration {
+        changeNotes.set(
+            provider {
+                changelog.renderItem(
+                    changelog.get(project.version.toString()),
+                    org.jetbrains.changelog.Changelog.OutputType.HTML,
+                )
+            }
+        )
+
         ideaVersion {
             sinceBuild.set("261.24374.151")
         }
