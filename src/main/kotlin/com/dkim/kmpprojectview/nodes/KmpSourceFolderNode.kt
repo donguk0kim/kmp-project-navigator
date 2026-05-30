@@ -32,8 +32,7 @@ class KmpSourceFolderNode(project: Project, folder: VirtualFile, settings: ViewS
     override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
 
     private fun iconFor(name: String) = when (name) {
-        "kotlin", "java" -> AllIcons.Modules.SourceRoot
         in RESOURCE_FOLDERS -> AllIcons.Modules.ResourcesRoot
-        else -> AllIcons.Nodes.Folder
+        else -> AllIcons.Modules.SourceRoot
     }
 }
