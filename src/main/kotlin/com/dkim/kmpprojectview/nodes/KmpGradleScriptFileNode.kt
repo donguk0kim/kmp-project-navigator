@@ -7,6 +7,8 @@ import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
+import com.intellij.openapi.vcs.FileStatus
+import com.intellij.openapi.vcs.FileStatusManager
 import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.util.IconUtil
 
@@ -20,6 +22,11 @@ class KmpGradleScriptFileNode(
     override fun getWeight(): Int = sortOrder
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> = emptyList()
+
+    override fun getVirtualFile(): VirtualFile = value
+
+    override fun getFileStatus(): FileStatus =
+        FileStatusManager.getInstance(project).getStatus(value)
 
     override fun update(presentation: PresentationData) {
         val (name, description) = buildDisplayParts()
