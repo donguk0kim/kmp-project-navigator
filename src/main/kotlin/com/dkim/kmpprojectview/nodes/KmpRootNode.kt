@@ -9,6 +9,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
+import com.intellij.openapi.vfs.VfsUtil
 
 class KmpRootNode(project: Project, settings: ViewSettings)
     : ProjectViewNode<Project>(project, project, settings) {
@@ -47,7 +48,11 @@ class KmpRootNode(project: Project, settings: ViewSettings)
         presentation.setPresentableText(project.name)
     }
 
-    override fun contains(file: VirtualFile): Boolean = true
+    override fun contains(file: VirtualFile): Boolean {
+        val basePath = project.basePath ?: return false
+        val baseDir = LocalFileSystem.getInstance().findFileByPath(basePath) ?: return false
+        return file == baseDir || VfsUtil.isAncestor(baseDir, file, false)
+    }
 
     private fun findIosAppDirs(moduleRoots: Set<VirtualFile>): List<VirtualFile> {
         val basePath = project.basePath ?: return emptyList()
