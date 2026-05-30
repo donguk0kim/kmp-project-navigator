@@ -26,7 +26,7 @@ class KmpGradleScriptsNode(project: Project, settings: ViewSettings)
 
     override fun getWeight(): Int = Int.MAX_VALUE
 
-    override fun contains(file: VirtualFile): Boolean = false
+    override fun contains(file: VirtualFile): Boolean = file in findGradleScripts()
 
     private fun findGradleScripts(): List<VirtualFile> {
         val scripts = mutableListOf<VirtualFile>()

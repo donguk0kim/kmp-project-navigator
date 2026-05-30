@@ -42,3 +42,7 @@ Build the plugin ZIP:
 
 The view is intentionally lightweight.
 It uses IntelliJ module/content-root information and project folders rather than parsing the full Gradle/Kotlin model.
+
+## License
+
+KMP Project View is released under the MIT License.

@@ -10,7 +10,6 @@ import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VfsUtil
 import com.intellij.psi.PsiManager
 
 class KmpManifestsNode(
@@ -31,5 +30,5 @@ class KmpManifestsNode(
         presentation.setIcon(AllIcons.Modules.SourceRoot)
     }
 
-    override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
+    override fun contains(file: VirtualFile): Boolean = file == manifestFile
 }
