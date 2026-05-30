@@ -13,7 +13,8 @@ class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: Vi
     : ProjectViewNode<VirtualFile>(project, sourceSetDir, settings) {
 
     companion object {
-        private val ALLOWED_FOLDERS = setOf("kotlin", "java", "resources", "res", "manifests")
+        private val ALLOWED_FOLDERS = setOf("kotlin", "java", "resources", "res", "composeResources", "manifests")
+        private val RESOURCE_FOLDERS = setOf("res", "resources", "composeResources")
     }
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> {
@@ -28,7 +29,7 @@ class KmpSourceSetNode(project: Project, sourceSetDir: VirtualFile, settings: Vi
 
         (value.children ?: emptyArray())
             .filter { it.isDirectory && it.name in ALLOWED_FOLDERS }
-            .sortedBy { it.name }
+            .sortedWith(compareBy<VirtualFile> { it.name in RESOURCE_FOLDERS }.thenBy { it.name })
             .mapTo(children) { KmpSourceFolderNode(project, it, settings) }
 
         return children
