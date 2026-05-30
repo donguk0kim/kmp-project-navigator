@@ -31,7 +31,11 @@ class KmpRootNode(project: Project, settings: ViewSettings)
                 // content root — they are not real Gradle subprojects
                 ModuleRootManager.getInstance(module).contentRoots.isNotEmpty()
             }
-            .map { KmpModuleNode(project, it, settings) }
+            .map { module ->
+                val contentRoot = ModuleRootManager.getInstance(module).contentRoots.first()
+                if (isIosAppDir(contentRoot)) KmpIosAppNode(project, contentRoot, settings)
+                else KmpModuleNode(project, module, settings)
+            }
 
         val iosNodes = findIosAppDirs(allModuleContentRoots)
             .map { KmpIosAppNode(project, it, settings) }
