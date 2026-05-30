@@ -1,6 +1,8 @@
 package com.dkim.kmpprojectnavigator.nodes
 
 import com.intellij.icons.AllIcons
+import com.intellij.ide.projectView.NodeSortOrder
+import com.intellij.ide.projectView.NodeSortSettings
 import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
@@ -20,6 +22,14 @@ class KmpPackageNode(
 
     override fun getChildren(): Collection<AbstractTreeNode<*>> = buildChildren(project, value, settings)
 
+    override fun getWeight(): Int = PACKAGE_WEIGHT
+
+    override fun getSortOrder(settings: NodeSortSettings): NodeSortOrder = NodeSortOrder.FOLDER
+
+    override fun getSortKey(): Comparable<*> = packageSortKey(displayName)
+
+    override fun getTypeSortKey(): Comparable<*> = PACKAGE_TYPE_SORT_KEY
+
     override fun update(presentation: PresentationData) {
         presentation.setPresentableText(displayName)
         presentation.setIcon(AllIcons.Nodes.Package)
@@ -28,9 +38,13 @@ class KmpPackageNode(
     override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
 
     companion object {
+        private const val PACKAGE_WEIGHT = 0
+        private const val PACKAGE_TYPE_SORT_KEY = "0.package"
+
         fun buildChildren(project: Project, dir: VirtualFile, settings: ViewSettings): List<AbstractTreeNode<*>> {
             val psiManager = PsiManager.getInstance(project)
             return (dir.children ?: emptyArray())
+                .sortedWith(compareBy<VirtualFile> { !it.isDirectory }.thenBy { it.name.lowercase() })
                 .mapNotNull { child ->
                     if (child.isDirectory) {
                         val (compacted, name) = compact(child)
@@ -57,5 +71,7 @@ class KmpPackageNode(
             }
             return current to parts.joinToString(".")
         }
+
+        private fun packageSortKey(name: String): String = "0.${name.lowercase()}"
     }
 }
