@@ -3,6 +3,8 @@
 KMP Project Navigator adds a dedicated IntelliJ project view for Kotlin Multiplatform projects.
 It groups Gradle modules, source sets, manifests, iOS app files, and Gradle scripts into a layout tailored for KMP development.
 
+<img src="Image.png" alt="KMP Project View" width="420">
+
 ## Features
 
 - Adds a `KMP Project` pane to the Project tool window.
