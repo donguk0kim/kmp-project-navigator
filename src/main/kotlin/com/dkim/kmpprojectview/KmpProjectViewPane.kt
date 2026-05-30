@@ -15,7 +15,7 @@ class KmpProjectViewPane(project: Project) : AbstractProjectViewPaneWithAsyncSup
         const val ID = "KmpProjectView"
     }
 
-    override fun getTitle(): String = "KMP"
+    override fun getTitle(): String = "KMP Project"
     override fun getIcon(): Icon = AllIcons.General.ProjectStructure
     override fun getId(): String = ID
     override fun getWeight(): Int = 10

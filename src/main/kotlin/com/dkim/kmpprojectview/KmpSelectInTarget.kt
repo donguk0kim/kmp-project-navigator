@@ -6,7 +6,7 @@ import com.intellij.psi.PsiFileSystemItem
 
 class KmpSelectInTarget(project: Project) : ProjectViewSelectInTarget(project) {
 
-    override fun toString(): String = "KMP"
+    override fun toString(): String = "KMP Project"
 
     override fun canSelect(item: PsiFileSystemItem): Boolean = true
 
