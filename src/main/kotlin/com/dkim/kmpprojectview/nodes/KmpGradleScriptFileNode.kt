@@ -4,6 +4,7 @@ import com.intellij.ide.projectView.PresentationData
 import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
 import com.intellij.ide.util.treeView.AbstractTreeNode
+import com.intellij.openapi.fileEditor.OpenFileDescriptor
 import com.intellij.openapi.module.ModuleManager
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.roots.ModuleRootManager
@@ -24,6 +25,14 @@ class KmpGradleScriptFileNode(
     override fun getChildren(): Collection<AbstractTreeNode<*>> = emptyList()
 
     override fun getVirtualFile(): VirtualFile = value
+
+    override fun canNavigate(): Boolean = value.isValid
+
+    override fun canNavigateToSource(): Boolean = canNavigate()
+
+    override fun navigate(requestFocus: Boolean) {
+        OpenFileDescriptor(project, value).navigate(requestFocus)
+    }
 
     override fun getFileStatus(): FileStatus =
         FileStatusManager.getInstance(project).getStatus(value)
