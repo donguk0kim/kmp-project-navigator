@@ -4,23 +4,23 @@ import com.intellij.icons.AllIcons
 import com.intellij.ide.projectView.NodeSortOrder
 import com.intellij.ide.projectView.NodeSortSettings
 import com.intellij.ide.projectView.PresentationData
-import com.intellij.ide.projectView.ProjectViewNode
 import com.intellij.ide.projectView.ViewSettings
+import com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode
 import com.intellij.ide.projectView.impl.nodes.PsiFileNode
 import com.intellij.ide.util.treeView.AbstractTreeNode
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.vfs.VirtualFile
-import com.intellij.openapi.vfs.VfsUtil
+import com.intellij.psi.PsiDirectory
 import com.intellij.psi.PsiManager
 
 class KmpPackageNode(
     project: Project,
-    dir: VirtualFile,
+    dir: PsiDirectory,
     private val displayName: String,
     settings: ViewSettings
-) : ProjectViewNode<VirtualFile>(project, dir, settings) {
+) : PsiDirectoryNode(project, dir, settings) {
 
-    override fun getChildren(): Collection<AbstractTreeNode<*>> = buildChildren(project, value, settings)
+    override fun getChildrenImpl(): Collection<AbstractTreeNode<*>> = buildChildren(project, value.virtualFile, settings)
 
     override fun getWeight(): Int = PACKAGE_WEIGHT
 
@@ -35,8 +35,6 @@ class KmpPackageNode(
         presentation.setIcon(AllIcons.Nodes.Package)
     }
 
-    override fun contains(file: VirtualFile): Boolean = VfsUtil.isAncestor(value, file, false)
-
     companion object {
         private const val PACKAGE_WEIGHT = 0
         private const val PACKAGE_TYPE_SORT_KEY = "0.package"
@@ -48,7 +46,7 @@ class KmpPackageNode(
                 .mapNotNull { child ->
                     if (child.isDirectory) {
                         val (compacted, name) = compact(child)
-                        KmpPackageNode(project, compacted, name, settings)
+                        psiManager.findDirectory(compacted)?.let { KmpPackageNode(project, it, name, settings) }
                     } else {
                         psiManager.findFile(child)?.let { PsiFileNode(project, it, settings) }
                     }
