@@ -45,7 +45,11 @@ class KmpPackageNode(
                 .sortedWith(compareBy<VirtualFile> { !it.isDirectory }.thenBy { it.name.lowercase() })
                 .mapNotNull { child ->
                     if (child.isDirectory) {
-                        val (compacted, name) = compact(child)
+                        val (compacted, name) = if (settings.isHideEmptyMiddlePackages) {
+                            compact(child)
+                        } else {
+                            child to child.name
+                        }
                         psiManager.findDirectory(compacted)?.let { KmpPackageNode(project, it, name, settings) }
                     } else {
                         psiManager.findFile(child)?.let { PsiFileNode(project, it, settings) }
